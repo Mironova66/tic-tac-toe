@@ -38,11 +38,13 @@ export default class extends React.Component<IProps, IState> {
   render() {
     const { squares, step, status } = this.state;
     const user = step % 2 === 0 ? 'x' : 'o';
+    const winner = step % 2 !== 0 ? 'x' : 'o';
 
     return (
       <div className="game">
         <div className="score">
           {status === 0 && <div>Текущий ход: {user}</div>}
+          {status === 1 && <div className="winner">Победил: {winner}</div>}
         </div>
       </div>
     );
