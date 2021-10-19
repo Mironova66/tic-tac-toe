@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 interface IProps {}
 
@@ -33,6 +33,53 @@ export default class extends React.Component<IProps, IState> {
       [0, 4, 8],
       [2, 4, 6]
     ];
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(e) {
+    const { step } = this.state;
+    const { index } = e.currentTarget.dataset;
+    const squares = [...this.state.squares];
+
+    if (squares[index]) {
+      return;
+    }
+
+    squares[index] = step % 2 === 0 ? 'x' : 'o';
+
+    this.setState({
+      squares,
+      step: step + 1
+    }, () => this.checkWinner());
+  }
+
+  checkWinner() {
+    const { squares, step } = this.state;
+
+    const user = step % 2 !== 0 ? 'x' : 'o';
+
+    this.winnerLines.forEach((line) => {
+      // console.log(squares[line[0]], squares[line[1]], squares[line[2]], '=', s);
+      if (
+        squares[line[0]] === user
+        && squares[line[1]] === user
+        && squares[line[2]] === user
+      ) {
+        this.setState({
+          status: 1
+        });
+      }
+    });
+
+    const { status } = this.state;
+
+    if (
+      status === 0
+      && step === 9
+    ) {
+      this.setState({ status: 2 });
+    }
   }
 
   render() {
@@ -42,9 +89,31 @@ export default class extends React.Component<IProps, IState> {
 
     return (
       <div className="game">
+        <div className="squares">
+          {squares.map((item, index) => (
+            <div
+              className="square"
+              key={index}
+              data-index={index}
+              onClick={this.handleClick}
+            >
+              <div className="index">{index}</div>
+              {item}
+            </div>
+          ))}
+        </div>
         <div className="score">
-          {status === 0 && <div>Текущий ход: {user}</div>}
-          {status === 1 && <div className="winner">Победил: {winner}</div>}
+          {status === 0 ? (
+            <div>Текущий ход: {user}</div>
+          ) : (
+            <div>
+              {status === 1 ? (
+                <div className="winner">Победил: {winner}</div>
+              ) : (
+                <div className="winner">Ничья</div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
