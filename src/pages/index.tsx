@@ -17,7 +17,7 @@ export default class extends React.Component<IProps, IState> {
     this.state = {
       squares: Array(9).fill(null),
       step: 0,
-      status: 2
+      status: 0
     };
 
     this.winnerLines = [
@@ -35,6 +35,7 @@ export default class extends React.Component<IProps, IState> {
     ];
 
     this.handleClick = this.handleClick.bind(this);
+    this.resetGame = this.resetGame.bind(this);
   }
 
   handleClick(e) {
@@ -82,6 +83,14 @@ export default class extends React.Component<IProps, IState> {
     }
   }
 
+  resetGame() {
+    this.setState({
+      squares: Array(9).fill(null),
+      step: 0,
+      status: 0
+    });
+  }
+
   render() {
     const { squares, step, status } = this.state;
     const user = step % 2 === 0 ? 'x' : 'o';
@@ -110,7 +119,10 @@ export default class extends React.Component<IProps, IState> {
               {status === 1 ? (
                 <div className="winner">Победил: {winner}</div>
               ) : (
-                <div className="winner">Ничья</div>
+                <div>
+                  <div className="winner">Ничья</div>
+                  <button onClick={this.resetGame}>Ничья</button>
+                </div>
               )}
             </div>
           )}
